@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insightify</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <span class="logo">Insightify</span>
+      <div class="user-pill">
+        <img id="user-avatar" alt="">
+        <span id="user-name">Loading…</span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Top Genre</span>
+        <span class="stat-value genre" id="stat-genre">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Avg Popularity</span>
+        <span class="stat-value" id="stat-popularity">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Unique Genres</span>
+        <span class="stat-value" id="stat-genres">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Recent Plays</span>
+        <span class="stat-value" id="stat-recent">—</span>
+      </div>
+    </div>
+
+    <section class="section" data-section="tracks">
+      <div class="section-header">
+        <h2 class="section-title">Top Tracks</h2>
+        <div class="time-tabs">
+          <button class="tab" data-range="short_term">4 Weeks</button>
+          <button class="tab active" data-range="medium_term">6 Months</button>
+          <button class="tab" data-range="long_term">All Time</button>
+        </div>
+      </div>
+      <div class="track-list" id="tracks-list">
+        <p class="empty">Loading…</p>
+      </div>
+    </section>
+
+    <section class="section" data-section="artists">
+      <div class="section-header">
+        <h2 class="section-title">Top Artists</h2>
+        <div class="time-tabs">
+          <button class="tab" data-range="short_term">4 Weeks</button>
+          <button class="tab active" data-range="medium_term">6 Months</button>
+          <button class="tab" data-range="long_term">All Time</button>
+        </div>
+      </div>
+      <div class="artist-grid" id="artists-grid">
+        <p class="empty">Loading…</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Recently Played</h2>
+      </div>
+      <div class="track-list" id="recent-list">
+        <p class="empty">Loading…</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
