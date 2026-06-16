@@ -8,6 +8,7 @@ load_dotenv()
 SCOPES = " ".join([
     "user-top-read",
     "user-read-recently-played",
+    "user-read-currently-playing",
     "user-library-read",
     "playlist-read-private",
 ])

@@ -104,6 +104,21 @@ function setupTabs(sectionAttr, loadFn) {
   });
 }
 
+async function loadNowPlaying() {
+  const data = await fetchJSON('/api/now-playing').catch(() => null);
+  const card = document.getElementById('now-playing');
+  if (!data) {
+    card.classList.remove('active');
+    return;
+  }
+  document.getElementById('np-art').src = data.album_art || '';
+  document.getElementById('np-name').textContent = data.name;
+  document.getElementById('np-artist').textContent = data.artists.join(', ');
+  const pct = Math.min(100, Math.round((data.progress_ms / data.duration_ms) * 100));
+  document.getElementById('np-fill').style.width = `${pct}%`;
+  card.classList.add('active');
+}
+
 async function init() {
   setupTabs('tracks', loadTracks);
   setupTabs('artists', loadArtists);
@@ -132,3 +147,11 @@ async function init() {
 }
 
 init().catch(err => console.error('Insightify init error:', err));
+
+// Live updates
+loadNowPlaying();
+setInterval(loadNowPlaying, 5000);
+setInterval(async () => {
+  const recent = await fetchJSON('/api/recently-played').catch(() => null);
+  if (recent) renderRecent(recent);
+}, 30000);
