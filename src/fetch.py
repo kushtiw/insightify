@@ -25,7 +25,7 @@ def get_top_artists(sp: spotipy.Spotify, limit: int = 50, time_range: str = "med
         time_range: 'short_term' (4 weeks), 'medium_term' (6 months), or 'long_term' (all time).
 
     Returns:
-        List of artist objects from the Spotify API, each including genres and popularity.
+        List of artist objects from the Spotify API.
     """
     result = sp.current_user_top_artists(limit=limit, time_range=time_range)
     return result["items"]

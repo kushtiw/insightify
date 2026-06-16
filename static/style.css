@@ -182,7 +182,7 @@ main {
 
 .track-row:hover { background: var(--hover); }
 
-.track-row.ranked  { grid-template-columns: 26px 46px 1fr 180px; }
+.track-row.ranked  { grid-template-columns: 26px 46px 1fr; }
 .track-row.recent  { grid-template-columns: 46px 1fr auto; }
 
 .rank {
@@ -327,7 +327,6 @@ main {
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .artist-grid { grid-template-columns: repeat(3, 1fr); }
   .track-row.ranked { grid-template-columns: 26px 46px 1fr; }
-  .track-row.ranked .pop-bar { display: none; }
 }
 
 @media (max-width: 600px) {
