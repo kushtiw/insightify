@@ -1,4 +1,5 @@
-# Spotlight
+# Insightify
+
 
 A Spotify listening-data analyzer. Pulls your top tracks, top artists, and recently played history from the Spotify API and lets you explore trends with pandas and matplotlib.
 
