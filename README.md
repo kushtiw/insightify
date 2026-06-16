@@ -1,60 +1,45 @@
 # Insightify
 
+Personal Spotify analytics dashboard. Pulls listening history from the Spotify API and surfaces it in a clean web UI — top tracks, top artists, and recently played, all switchable across time ranges.
 
-A Spotify listening-data analyzer. Pulls your top tracks, top artists, and recently played history from the Spotify API and lets you explore trends with pandas and matplotlib.
+Built with Flask on the backend and vanilla JS on the front. No frameworks, no build step.
 
-## Setup
+![black and green minimal UI](https://img.shields.io/badge/stack-Python%20%7C%20Flask%20%7C%20Vanilla%20JS-1db954?style=flat-square)
 
-### 1. Create a Spotify app
+## Stack
 
-1. Go to [Spotify for Developers](https://developer.spotify.com/dashboard) and create a new app.
-2. In the app settings, add `http://127.0.0.1:8888/callback` as a Redirect URI.
-3. Copy your **Client ID** and **Client Secret**.
+- **Backend** — Python / Flask, Spotipy (Authorization Code flow)
+- **Frontend** — HTML, CSS, vanilla JS (no framework)
+- **Data** — pandas, matplotlib (for future analysis notebooks)
 
-### 2. Configure credentials
+## Getting started
 
-Edit `.env` and fill in your values:
+You'll need a Spotify app. Head to the [developer dashboard](https://developer.spotify.com/dashboard), create one, and add `http://127.0.0.1:8888/callback` as a redirect URI. Grab the client ID and secret from the app settings.
 
-```
-SPOTIFY_CLIENT_ID=your_client_id_here
-SPOTIFY_CLIENT_SECRET=your_client_secret_here
-SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
-```
-
-### 3. Install dependencies
+Clone the repo and set up the environment:
 
 ```bash
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
-
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 4. Run the connection test
+Copy your credentials into `.env`:
+
+```
+SPOTIFY_CLIENT_ID=...
+SPOTIFY_CLIENT_SECRET=...
+SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
+```
+
+Run it:
 
 ```bash
-python main.py
+python app.py
 ```
 
-A browser window will open for Spotify login and permission grant. After authorizing, the terminal will print your Spotify display name.
-
-## Project structure
-
-```
-spotlight/
-├── src/
-│   ├── auth.py       # SpotifyOAuth client setup
-│   └── fetch.py      # Data-fetching functions
-├── main.py           # Connection test entry point
-├── requirements.txt
-├── .env              # Credentials (never commit this)
-└── .gitignore
-```
+First run opens a browser for Spotify auth. After that the token is cached locally.
 
 ## Notes
 
-- Spotify deprecated audio-features, audio-analysis, recommendations, and related-artists for new apps (Nov 27, 2024). This project does not use those endpoints.
-- The `.cache` token file (created by Spotipy after first login) is excluded from git.
+Spotify deprecated audio features, audio analysis, recommendations, and related artists for new apps in November 2024 — none of those endpoints are used here. Everything is built around what's still available: top tracks, top artists, recently played, and basic track/artist metadata.
