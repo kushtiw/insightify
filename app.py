@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 from src.auth import get_client
 from src.fetch import get_top_tracks, get_top_artists, get_recently_played
+from src.analytics import compute_analytics
 
 app = Flask(__name__)
 sp = get_client()
@@ -31,6 +32,12 @@ def api_top_artists():
 @app.route('/api/recently-played')
 def api_recently_played():
     return jsonify(get_recently_played(sp, limit=50))
+
+
+@app.route('/api/analytics')
+def api_analytics():
+    recent = get_recently_played(sp, limit=50)
+    return jsonify(compute_analytics(recent))
 
 
 @app.route('/api/now-playing')

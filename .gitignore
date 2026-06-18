@@ -29,6 +29,10 @@ exports/
 *.csv
 *.json
 
+# Node
+client/node_modules/
+client/dist/
+
 # OS
 .DS_Store
 Thumbs.db
