@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale, LinearScale, BarElement,
@@ -65,29 +65,28 @@ function Summary({ summary }) {
 
 export default function Analytics({ initial }) {
   const [range, setRange] = useState('all')
-  const [data, setData] = useState(initial)
-  const [loading, setLoading] = useState(false)
-  const latestRange = useRef('all')
-
-  // App loads the default ('all') range; keep in sync until the user picks another.
-  useEffect(() => {
-    if (range === 'all') setData(initial)
-  }, [initial]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Results keyed by range, so a slow response can never overwrite another range's charts.
+  const [results, setResults] = useState({})
+  const [loadingRange, setLoadingRange] = useState(null)
 
   async function switchRange(r) {
     if (r === range) return
     setRange(r)
-    latestRange.current = r
-    setLoading(true)
+    setLoadingRange(r)
     try {
       const res = await fetch(`/api/analytics?range=${r}`)
-      const json = res.ok ? await res.json() : null
-      // Ignore responses for a range the user has already switched away from.
-      if (json && latestRange.current === r) setData(json)
+      if (res.ok) {
+        const json = await res.json()
+        setResults(prev => ({ ...prev, [r]: json }))
+      }
     } finally {
-      if (latestRange.current === r) setLoading(false)
+      setLoadingRange(cur => (cur === r ? null : cur))
     }
   }
+
+  // App loads the 'all' range up front; until a range's own result arrives, keep showing that.
+  const data = results[range] ?? initial
+  const loading = loadingRange === range
 
   if (!data) return null
 

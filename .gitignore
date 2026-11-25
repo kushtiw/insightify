@@ -28,6 +28,9 @@ data/
 exports/
 *.csv
 *.json
+# ...but keep the frontend's package manifests
+!client/package.json
+!client/package-lock.json
 
 # Node
 client/node_modules/
