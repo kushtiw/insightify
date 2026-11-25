@@ -65,3 +65,25 @@ def insert_plays(conn: sqlite3.Connection, items: list[dict]) -> int:
 def count_plays(conn: sqlite3.Connection) -> int:
     """Return the total number of plays stored."""
     return conn.execute("SELECT COUNT(*) FROM plays").fetchone()[0]
+
+
+def load_plays(conn: sqlite3.Connection, since: str | None = None) -> list[dict]:
+    """Return stored plays, oldest first.
+
+    Args:
+        conn: Open connection from get_connection().
+        since: Optional UTC timestamp in Spotify's format (e.g. '2026-11-01T00:00:00.000Z');
+            only plays at or after it are returned.
+
+    Returns:
+        List of dicts with played_at, track_name, artist_name and duration_ms.
+    """
+    query = "SELECT played_at, track_name, artist_name, duration_ms FROM plays"
+    params: tuple = ()
+    if since:
+        query += " WHERE played_at >= ?"
+        params = (since,)
+    query += " ORDER BY played_at"
+    cursor = conn.execute(query, params)
+    columns = [c[0] for c in cursor.description]
+    return [dict(zip(columns, row)) for row in cursor.fetchall()]

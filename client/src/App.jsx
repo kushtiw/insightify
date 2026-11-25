@@ -60,7 +60,7 @@ export default function App() {
         <StatCards topTracks={topTracks} topArtists={topArtists} recentCount={recent.length} />
         <TopTracks initial={topTracks} />
         <TopArtists initial={topArtists} />
-        <Analytics data={analytics} />
+        <Analytics initial={analytics} />
         <RecentlyPlayed items={recent} />
       </main>
     </>

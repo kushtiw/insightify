@@ -1,7 +1,10 @@
+from datetime import datetime, timedelta, timezone
+
 from flask import Flask, jsonify, render_template, request
 from src.auth import get_client
 from src.fetch import get_top_tracks, get_top_artists, get_recently_played
 from src.analytics import compute_analytics
+from src.db import get_connection, insert_plays, load_plays
 
 app = Flask(__name__)
 sp = get_client()
@@ -34,10 +37,36 @@ def api_recently_played():
     return jsonify(get_recently_played(sp, limit=50))
 
 
+ANALYTICS_RANGES = {'7d': 7, '30d': 30, 'all': None}
+
+
 @app.route('/api/analytics')
 def api_analytics():
-    recent = get_recently_played(sp, limit=50)
-    return jsonify(compute_analytics(recent))
+    range_key = request.args.get('range', 'all')
+    if range_key not in ANALYTICS_RANGES:
+        return jsonify({'error': f"range must be one of {', '.join(ANALYTICS_RANGES)}"}), 400
+
+    conn = get_connection()
+    try:
+        # Save the latest plays first so the charts are current and history
+        # keeps growing whenever the dashboard is open.
+        try:
+            insert_plays(conn, get_recently_played(sp, limit=50))
+        except Exception:
+            app.logger.exception('Could not fetch recently played; using stored history only')
+
+        days = ANALYTICS_RANGES[range_key]
+        since = None
+        if days:
+            cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+            since = cutoff.strftime('%Y-%m-%dT%H:%M:%S.000Z')
+        plays = load_plays(conn, since=since)
+    finally:
+        conn.close()
+
+    result = compute_analytics(plays)
+    result['range'] = range_key
+    return jsonify(result)
 
 
 @app.route('/api/now-playing')
